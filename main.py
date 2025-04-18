@@ -1,5 +1,5 @@
 import score_dataset, select_dataset, chain_of_thought
-import proof_prompter, proof_mapping_prompter
+import prompt.proof, prompt.proof_mapping
 
 def make(dataset, scorer, selector, model, vllm_address, prompter):
     data_info = score_dataset.make(dataset, scorer)
@@ -14,6 +14,6 @@ if __name__ == "__main__":
     selector = "q9_1000"
     model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
     vllm_address = "http://localhost:8000/v1"
-    prompter = proof_prompter.prompter
+    prompter = prompt.proof.prompter
 
     make(dataset, scorer, selector, model, vllm_address, prompter)
