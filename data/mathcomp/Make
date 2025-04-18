@@ -1,0 +1,123 @@
+algebra/all_algebra.v
+algebra/archimedean.v
+algebra/countalg.v
+algebra/finalg.v
+algebra/fraction.v
+algebra/intdiv.v
+algebra/interval.v
+algebra/interval_inference.v
+algebra/matrix.v
+algebra/mxalgebra.v
+algebra/mxpoly.v
+algebra/mxred.v
+algebra/polydiv.v
+algebra/poly.v
+algebra/polyXY.v
+algebra/qpoly.v
+algebra/rat.v
+algebra/ring_quotient.v
+algebra/ssralg.v
+algebra/ssrint.v
+algebra/ssrnum.v
+algebra/vector.v
+algebra/zmodp.v
+algebra/sesquilinear.v
+algebra/spectral.v
+all/all.v
+character/all_character.v
+character/character.v
+character/classfun.v
+character/inertia.v
+character/integral_char.v
+character/mxabelem.v
+character/mxrepresentation.v
+character/vcharacter.v
+field/algC.v
+field/algebraics_fundamentals.v
+field/algnum.v
+field/all_field.v
+field/closed_field.v
+field/cyclotomic.v
+field/falgebra.v
+field/fieldext.v
+field/finfield.v
+field/galois.v
+field/qfpoly.v
+field/separable.v
+fingroup/action.v
+fingroup/all_fingroup.v
+fingroup/automorphism.v
+fingroup/fingroup.v
+fingroup/gproduct.v
+fingroup/morphism.v
+fingroup/perm.v
+fingroup/presentation.v
+fingroup/quotient.v
+solvable/abelian.v
+solvable/all_solvable.v
+solvable/alt.v
+solvable/burnside_app.v
+solvable/center.v
+solvable/commutator.v
+solvable/cyclic.v
+solvable/extraspecial.v
+solvable/extremal.v
+solvable/finmodule.v
+solvable/frobenius.v
+solvable/gfunctor.v
+solvable/gseries.v
+solvable/hall.v
+solvable/jordanholder.v
+solvable/maximal.v
+solvable/nilpotent.v
+solvable/pgroup.v
+solvable/primitive_action.v
+solvable/sylow.v
+ssreflect/all_ssreflect.v
+ssreflect/bigop.v
+ssreflect/binomial.v
+ssreflect/choice.v
+ssreflect/div.v
+ssreflect/eqtype.v
+ssreflect/finfun.v
+ssreflect/fingraph.v
+ssreflect/finset.v
+ssreflect/fintype.v
+ssreflect/generic_quotient.v
+ssreflect/order.v
+ssreflect/path.v
+ssreflect/prime.v
+ssreflect/seq.v
+ssreflect/ssrAC.v
+ssreflect/ssrbool.v
+ssreflect/ssreflect.v
+ssreflect/ssrfun.v
+ssreflect/ssrmatching.v
+ssreflect/ssrnat.v
+ssreflect/ssrnotations.v
+ssreflect/tuple.v
+
+-I .
+-R . mathcomp
+
+# Warnings set as error to avoid (re)introducing them
+-arg -w -arg +duplicate-clear
+-arg -w -arg +non-primitive-record
+-arg -w -arg +undeclared-scope
+-arg -w -arg +deprecated-hint-without-locality
+-arg -w -arg +deprecated-hint-rewrite-without-locality
+# Warnings we don't really know how to handle
+-arg -w -arg -projection-no-head-constant
+-arg -w -arg -redundant-canonical-projection
+-arg -w -arg -notation-overridden
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -elpi.add-const-for-axiom-or-sectionvar
+# handle the two following one when requiring Coq >= 8.20
+-arg -w -arg -closed-notation-not-level-0
+-arg -w -arg -postfix-notation-not-level-1
+# handle the following one when requiring Rocq >= 9.0
+-arg -w -arg -deprecated-from-Coq
+# remove this one when requiring Rocq >= 9.0
+-arg -w -arg -overwriting-delimiting-key
+# introduced in MathComp 2.4.0, to be removed in a few versions
+-arg -w -arg -mathcomp-subset-itv

@@ -1,0 +1,44 @@
+all_ssreflect.v
+eqtype.v
+seq.v
+ssrAC.v
+ssrbool.v
+ssreflect.v
+ssrfun.v
+ssrnat.v
+bigop.v
+binomial.v
+choice.v
+div.v
+finfun.v
+fingraph.v
+finset.v
+fintype.v
+generic_quotient.v
+path.v
+prime.v
+tuple.v
+ssrnotations.v
+ssrmatching.v
+order.v
+
+-I .
+-R . mathcomp.ssreflect
+
+# Warnings set as error to avoid (re)introducing them
+-arg -w -arg +duplicate-clear
+-arg -w -arg +undeclared-scope
+-arg -w -arg +deprecated-hint-without-locality
+-arg -w -arg +deprecated-hint-rewrite-without-locality
+# Warnings we don't really know how to handle
+-arg -w -arg -projection-no-head-constant
+-arg -w -arg -redundant-canonical-projection
+-arg -w -arg -notation-overridden
+-arg -w -arg -ambiguous-paths
+# handle the two following one when requiring Coq >= 8.20
+-arg -w -arg -closed-notation-not-level-0
+-arg -w -arg -postfix-notation-not-level-1
+# handle the following ones when requiring Rocq >= 9.0
+-arg -w -arg -deprecated-from-Coq
+# remove this one when requiring Rocq >= 9.0
+-arg -w -arg -overwriting-delimiting-key
