@@ -12,25 +12,28 @@ class Prompter():
         self.format = format
 
     def prompt(self, theorem):
-        return [self.sys_prompt, self.usr_prompt.format(**theorem)]
+        return [
+            { "role": "system", "content": self.sys_prompt },
+            { "role": "user", "content": self.usr_prompt.format(**theorem) }
+        ]
 
 def log(logfile, messages: list[str], resp: str):
     with open(logfile, "a") as file:
         content = {
-            "message": "\n".join(messages),
+            "message": "\n".join([m["content"] for m in messages]),
             "response": resp
         }
         content = json.dumps(content, indent=2)
         file.write(content + "\n")
 
 def response(client, model, temperature, logger, messages: list[str]) -> str:
-    raw = client.completions.create(
+    raw = client.chat.completions.create(
         model=model,
-        prompt=messages,
+        messages=messages,
         max_tokens=4096,
         temperature=temperature
     )
-    resp = raw.choices[0].text
+    resp = raw.choices[0].message.content
     logger(messages, resp)
     return resp
 
@@ -54,7 +57,7 @@ def make(model, vllm_address, prompter, datafile, temperature=1.0):
                 if i % 4 == 0:
                     thms.append(thm)
                 else:
-                    thms[i//4] += "\n" +thm
+                    thms[i//4] += "\n" + thm
 
         client = OpenAI(
             api_key="EMPTY",
@@ -63,6 +66,7 @@ def make(model, vllm_address, prompter, datafile, temperature=1.0):
 
         datafilename = os.path.basename(datafilename)
         logfile = os.path.join("./log", f"{datafilename}_{provider}_{model_name}_{dt}")
+        open(logfile, "w").close()
         def logger(messages, response):
             log(logfile, messages, response)
 
