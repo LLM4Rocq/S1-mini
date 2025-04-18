@@ -89,14 +89,14 @@ def get_theorems_in_file(path):
 
     return theorems
 
-def make(scorer, directory):
+def make(dataset, scorer):
     """
     Read all Rocq files in the `directory` and save all theorems.
     Compute the similarity scores of the theorems with the `scorer`.
     Save theorems and scores in a file.
     """
 
-    datafile = f"{directory}_{scorer}.json"
+    datafile = f"data/scored/{dataset}_{scorer}.json"
 
     if os.path.exists(datafile):
         print("Scored dataset already here.")
@@ -105,7 +105,7 @@ def make(scorer, directory):
         print("Making the scored dataset.")
 
         print("  Get all Rocq files ...")
-        files = get_rocq_files(directory)
+        files = get_rocq_files(f"data/raw/{dataset}")
 
         print("  Remove comments from files ...")
         uncommented_files = list(map(remove_comment_in_file, files))
@@ -133,4 +133,4 @@ def make(scorer, directory):
 
         print("  DONE!")
 
-    return datafile
+    return f"{dataset}_{scorer}"

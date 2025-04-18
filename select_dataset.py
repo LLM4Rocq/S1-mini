@@ -24,11 +24,10 @@ def format_theorem(thm):
         proof = match.group("proof")
         return {"statement": statement, "proof": proof}
 
-def make(selector, datafile):
+def make(selector, data_info):
     """Select theorems with the `selector`, format them and save them."""
 
-    dataset = os.path.splitext(datafile)[0]
-    savefile = f"{dataset}_{selector}.jsonl"
+    savefile = f"data/selected/{data_info}_{selector}.jsonl"
 
     if os.path.exists(savefile):
         print("Selected dataset already here.")
@@ -37,6 +36,7 @@ def make(selector, datafile):
         print("Making the selected dataset:")
 
         print("  Download the data ...")
+        datafile = f"data/scored/{data_info}.json"
         with open(datafile, "r") as file:
             data = json.load(file)
             scores_thms = list(zip(data["scores"], data["theorems"]))
@@ -60,4 +60,4 @@ def make(selector, datafile):
 
         print("  DONE!")
 
-    return savefile
+    return f"{data_info}_{selector}"

@@ -1,5 +1,6 @@
 from openai import OpenAI
 import os
+from pathlib import Path
 import json
 from datetime import datetime
 from tqdm import tqdm
@@ -37,51 +38,47 @@ def response(client, model, temperature, logger, messages: list[str]) -> str:
     logger(messages, resp)
     return resp
 
-def make(model, vllm_address, prompter, datafile, temperature=1.0):
+def make(model, vllm_address, prompter, data_info, temperature=1.0):
     """Add chains of thought to a dataset of theorems."""
 
     dt = datetime.now().strftime("%y%m%d_%H%M%S")
 
     provider, model_name = model.split('/')
-    datafilename = os.path.splitext(datafile)[0]
-    savefile = f"{datafilename}_{provider}_{model_name}_{dt}.jsonl"
+    savefile = Path("data", "CoT", provider, model_name, data_info, f"{dt}.jsonl")
+    savefile.parent.mkdir(parents=True, exist_ok=True)
 
-    if os.path.exists(savefile):
-        print("Chains of Thought already available ...")
-    else:
+    print("Reading the data ...")
+    thms = []
+    datafile = f"data/selected/{data_info}.jsonl"
+    with open(datafile, "r") as datas:
+        for i, thm in enumerate(datas):
+            if i % 4 == 0:
+                thms.append(thm)
+            else:
+                thms[i//4] += "\n" + thm
 
-        print("  Reading the data ...")
-        thms = []
-        with open(datafile, "r") as datas:
-            for i, thm in enumerate(datas):
-                if i % 4 == 0:
-                    thms.append(thm)
-                else:
-                    thms[i//4] += "\n" + thm
+    client = OpenAI(
+        api_key="EMPTY",
+        base_url=vllm_address
+    )
 
-        client = OpenAI(
-            api_key="EMPTY",
-            base_url=vllm_address
-        )
+    logfile = Path("log", provider, model_name, data_info, f"{dt}.jsonl")
+    logfile.parent.mkdir(parents=True, exist_ok=True)
+    def logger(messages, response):
+        log(logfile, messages, response)
 
-        datafilename = os.path.basename(datafilename)
-        logfile = os.path.join("./log", f"{datafilename}_{provider}_{model_name}_{dt}")
-        open(logfile, "w").close()
-        def logger(messages, response):
-            log(logfile, messages, response)
+    print("Generating chains of thought ...")
+    with open(savefile, "w") as new_datas:
+        for thm in tqdm(thms):
+            thm = json.loads(thm)
+            messages = prompter.prompt(thm)
+            resp = response(client, model, temperature, logger, messages)
+            llm_result = prompter.parse(resp)
+            result = prompter.format(thm, llm_result)
 
-        print("  Generating chains of thought ...")
-        with open(savefile, "w") as new_datas:
-            for thm in tqdm(thms):
-                thm = json.loads(thm)
-                messages = prompter.prompt(thm)
-                resp = response(client, model, temperature, logger, messages)
-                llm_result = prompter.parse(resp)
-                result = prompter.format(thm, llm_result)
+            result = json.dumps(result, indent=2)
+            new_datas.write(result + "\n")
 
-                result = json.dumps(result, indent=2)
-                new_datas.write(result + "\n")
+    print("DONE!")
 
-        print("  DONE!")
-
-    return savefile
+    return provider, model_name, data_info, dt
